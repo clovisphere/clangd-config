@@ -1,0 +1,90 @@
+# Apply this config conditionally to all C files
+If:
+  PathMatch: .*\.(c|h)$
+CompileFlags:
+  Add:
+    - -std=c23
+  Compiler: /usr/local/bin/gcc
+
+---
+# Apply this config conditionally to all C++ files
+If:
+  PathMatch: .*\.(c|h)pp
+CompileFlags:
+  Add:
+    - -xc++
+    - -std=c++23
+    - -Wall
+    - -Wno-missing-prototypes
+  # Remove extra warnings specified in compile commands.
+  # Single value is also acceptable, same as "Remove: [-mabi]"
+  Remove: -mabi
+  Compiler: /usr/local/bin/g++
+
+---
+# Apply this config conditionally to all CUDA files
+If:
+  PathMatch: .*\.cuh?
+CompileFlags:
+  Compiler: /usr/local/cuda/bin/nvcc
+
+---
+# Tweak the clangd parse settings for all files
+CompileFlags:
+  Add:
+    - -ferror-limit=0
+  Remove:
+    # strip CUDA fatbin args
+    - -Xfatbin*
+    # strip CUDA arch flags
+    - -gencode*
+    - --generate-code*
+    # strip CUDA flags unknown to clang
+    - -ccbin*
+    - --compiler-options*
+    - --expt-extended-lambda
+    - --expt-relaxed-constexpr
+    - -forward-unknown-to-host-compiler
+    - -Werror=cross-execution-space-call
+Hover:
+  ShowAKA: false
+InlayHints:
+  Enabled: false
+Diagnostics:
+  # Tweak Clang-Tidy checks.
+  ClangTidy:
+    Add:
+      - performance*
+      - modernize*
+      - readability*
+    Remove:
+      - modernize-use-trailing-return-type
+    CheckOptions:
+      readability-implicit-bool-conversion.AllowPointerConditions: 1
+      readability-identifier-naming.NamespaceCase: CamelCase
+      readability-identifier-naming.TypedefCase: CamelCase
+      readability-identifier-naming.TypedefSuffix: _t
+      readability-identifier-naming.TypeAliasCase: CamelCase
+      readability-identifier-naming.TypeAliasSuffix: _t
+      readability-identifier-naming.ClassCase: CamelCase
+      readability-identifier-naming.TemplateCase: CamelCase
+      readability-identifier-naming.TemplatePrefix: T
+      readability-identifier-naming.StructCase: CamelCase
+      readability-identifier-naming.AbstractClassCase: CamelCase
+      readability-identifier-naming.AbstractClassPrefix: I
+      readability-identifier-naming.PrivateMemberCase: CamelCase
+      readability-identifier-naming.PrivateMemberPrefix: m_
+      readability-identifier-naming.ProtectedMemberCase: CamelCase
+      readability-identifier-naming.ProtectedMemberPrefix: m_
+      readability-identifier-naming.PublicMemberCase: camelBack
+      readability-identifier-naming.ParameterCase: camelBack
+      readability-identifier-naming.LocalVariable: camelBack
+      readability-identifier-naming.ConstantCase: CamelCase
+      readability-identifier-naming.ConstantPrefix: c_
+      readability-identifier-naming.EnumCase: CamelCase
+      readability-identifier-naming.EnumConstantCase: CamelCase
+      readability-identifier-naming.ProtectedMethodCase: camelBack
+      readability-identifier-naming.PublicMethodCase: camelBack
+      readability-identifier-naming.PrivateMethodCase: camelBack
+      readability-identifier-naming.PrivateMethodPrefix: _
+      readability-identifier-naming.MacroDefinitionCase: UPPER_CASE
