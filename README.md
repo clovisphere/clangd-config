@@ -1,2 +1,3 @@
 # clangd-config
-My clangd's config.yaml
+
+This [config.yaml](./config.yaml) should be added to `~/Library/Preferences/clangd` (MacOS 💻)
