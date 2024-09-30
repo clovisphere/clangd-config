@@ -4,7 +4,7 @@ If:
 CompileFlags:
   Add:
     - -std=c23
-  Compiler: /usr/local/bin/gcc
+  Compiler: /usr/bin/clang
 
 ---
 # Apply this config conditionally to all C++ files
@@ -19,7 +19,7 @@ CompileFlags:
   # Remove extra warnings specified in compile commands.
   # Single value is also acceptable, same as "Remove: [-mabi]"
   Remove: -mabi
-  Compiler: /usr/local/bin/g++
+  Compiler: /usr/bin/clang++
 
 ---
 # Apply this config conditionally to all CUDA files
